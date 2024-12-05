@@ -55,7 +55,7 @@
 
 #include <efi.h>
 #include <efilib.h>
-#include "util.h"
+//#include "util.h"
 
 typedef unsigned char uchar;
 typedef const    char cchar;
@@ -1625,6 +1625,29 @@ static int inchar()
 	global_eST->ConIn->ReadKeyStroke(global_eST->ConIn, &key);
 	got = key.UnicodeChar;
 	return got;
+}
+
+int ub_c2u(CHAR16 *pwcs, const char *s, int n)
+{
+	int count = 0;
+	if (n != 0) {
+		do {
+			if ((*pwcs++ = (CHAR16) *s++) == 0)
+				break;
+			count++;
+		} while (--n != 0);
+	}
+	return count;
+}
+
+int ub_putchar(int character, EFI_SYSTEM_TABLE *eST)
+{
+	CHAR16 ch[2]; /* This variable needs to be an array of 2 or else an extra space prints */
+	ub_c2u(ch,(char *)&character,1);
+
+	uefi_call_wrapper(eST->ConOut->OutputString, 2, eST->ConOut, ch);
+
+	return character;
 }
 
 static void outchar(uchar c)

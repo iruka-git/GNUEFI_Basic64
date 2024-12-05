@@ -32,7 +32,8 @@ systemd_boot_solib   = boot.so
 #
 # === Objects:
 #
-systemd_boot_objects = basic.o util.o 
+systemd_boot_objects = basic.o
+# util.o 
 #
 # ===  BOOTX64.EFI を作る.
 #
